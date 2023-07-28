@@ -10,8 +10,5 @@ COPY input_molecules.txt compound_normalization.py requirements.txt /app/
 # Install required dependencies
 RUN pip install -r requirements.txt
 
-# Install required dependencies
-RUN pip install -r requirements.txt
-
 # Call python script with argument
 CMD [ "python", "./compound_normalization.py", "input_molecules.txt" ]
