@@ -101,7 +101,7 @@ class Molecule:
     def getCid(self):
         return self.cid
 
-def export_to_excel(df, file_name):
+def export_to_excel(df, file_name, sheet_name):
     # Saves df with molecules and properties into excel table with formatting and number types
     def columns_table_format(df):
         # Prepares column names in acceptable format for the excel table
@@ -112,13 +112,16 @@ def export_to_excel(df, file_name):
             output_list.append(dictt)
         return output_list
 
+    # Remove duplicates in dataframe table to save possible space
+    df = df.drop_duplicates().reset_index(inplace=False)
+
     # Create a Pandas Excel writer using XlsxWriter as the engine.
     writer = pd.ExcelWriter(f'{file_name}', engine='xlsxwriter', engine_kwargs={'options': {'strings_to_numbers': True}})
-    df.to_excel(writer, index=False, sheet_name='Properties')
+    df.to_excel(writer, index=False, sheet_name=sheet_name)
 
     # Get access to the workbook and sheet
     workbook = writer.book
-    worksheet = writer.sheets['Properties']
+    worksheet = writer.sheets[sheet_name]
 
     numbers_int = workbook.add_format()
     numbers_int.set_num_format(1)
@@ -150,7 +153,7 @@ def main(compounds_list):
     comp = Compounds(compounds_list,
                      properties=proplist)
     df =comp.getCompoundsPropertiesData()
-    export_to_excel(df, "Compounds.xlsx")
+    export_to_excel(df,file_name="Compounds.xlsx", sheet_name='Properties')
 
 if __name__=="__main__":
     if len(sys.argv)!=2:
