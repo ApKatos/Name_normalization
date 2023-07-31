@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import pandas as pd
 import numpy as np
 from compound_normalization import export_to_excel
@@ -31,7 +33,7 @@ def lipinski_rule(df: pd.DataFrame):
     df = check_criteria("lipinski_rule", 3, df, lipinski_rules)
     return df
 
-def main():
+def evaluate_compounds():
     # Excel file with compounds properties
     excel_file = "Compounds.xlsx"
     df = pd.read_excel(excel_file)
@@ -39,10 +41,13 @@ def main():
     # Evaluating compounds according to Lipinski rule of 5
     df = lipinski_rule(df)
 
-    df_export=df[["cid","normalized_name","lipinski_score","lipinski_approved"]].drop_duplicates()\
-        .sort_values(by="lipinski_score",ascending=False)\
+    df_export = df[["cid", "normalized_name", "lipinski_rule_score", "lipinski_rule_approved"]].drop_duplicates() \
+        .sort_values(by="lipinski_rule_score", ascending=False) \
         .reset_index(drop=True)
-    export_to_excel(df_export, "Compounds_ranking.xlsx" , "Ranking")
+    export_to_excel(df_export, "Compounds_ranking.xlsx", "Ranking")
+
+def main():
+    evaluate_compounds()
 
 if __name__ == '__main__':
     main()
