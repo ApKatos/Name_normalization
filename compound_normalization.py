@@ -112,11 +112,9 @@ def export_to_excel(df, file_name, sheet_name):
             output_list.append(dictt)
         return output_list
 
-    # Remove duplicates in dataframe table to save possible space
-    df = df.drop_duplicates().reset_index(inplace=False)
-
     # Create a Pandas Excel writer using XlsxWriter as the engine.
-    writer = pd.ExcelWriter(f'{file_name}', engine='xlsxwriter', engine_kwargs={'options': {'strings_to_numbers': True}})
+    writer = pd.ExcelWriter(f'{file_name}', engine='xlsxwriter',
+                            engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, index=False, sheet_name=sheet_name)
 
     # Get access to the workbook and sheet
