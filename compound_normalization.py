@@ -144,7 +144,7 @@ def export_to_excel(df, file_name, sheet_name):
                                                                  })
     worksheet.autofit()
     writer.close()
-def main(compounds_list):
+def process_molecules(compounds_list):
     #  ['molecular_formula', 'molecular_weight', 'canonical_smiles', 'isomeric_smiles','xlogp','h_bond_donor_count', 'h_bond_acceptor_count']
     proplist = PropertiesList(allProps=True, prop=["xlogp", "isomeric_smiles","h_bond_acceptor_count","molecular_weight","canonical_smiles",
                                     "rotatable_bond_count","molecular_formula","h_bond_donor_count"])
@@ -152,8 +152,7 @@ def main(compounds_list):
                      properties=proplist)
     df =comp.getCompoundsPropertiesData()
     export_to_excel(df,file_name="Compounds.xlsx", sheet_name='Properties')
-
-if __name__=="__main__":
+def read_and_save_molecules():
     if len(sys.argv)!=2:
         print("Usage: use input_molecules.txt input file to read compound names or pass argument X to read molecules from script variable")
         sys.exit(1)
@@ -164,15 +163,21 @@ if __name__=="__main__":
                 with open(input_a, 'r') as file:
                     lines = file.readlines()
                     # Optional: Remove newline characters from each line and strip leading/trailing whitespaces
-                    lines = [line.strip() for line in lines]
-                    main(lines)
+                    molecules = [line.strip() for line in lines]
+                    process_molecules(molecules)
             except FileNotFoundError:
                 print(f"Error: File '{input_a}' not found.")
                 sys.exit(1)
         elif input_a.lower()=="x":
             molecules=["Adenosine","Adenocard","BG8967","Bivalirudin","BAYT006267","diflucan","ibrutinib","PC-32765"]
-            main(molecules)
+            process_molecules(molecules)
         else:
             print(f"Invalid call of python script. Usage: use input_molecules.txt input file to read compound names or pass argument X to read molecules from script variable")
             sys.exit(1)
 
+
+def main():
+    read_and_save_molecules()
+
+if __name__=="__main__":
+    main()
