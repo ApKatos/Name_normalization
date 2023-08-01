@@ -1,27 +1,9 @@
 #!/usr/bin/env python3
 
-# REST
-# ____________________________________________________________________________________________
-# data = requests.get("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/Adenosine/cids/xml")
-# html = BeautifulSoup(data.content, "xml")
-# #
-# cid = html.find(name="CID").string
-# ____________________________________________________________________________________________
-
-# VIEW
-# data = requests.get(f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/xml")
-# data
-# with open('fetched_data_view.xml', 'wb') as f:
-#     f.write(data.content)
-# html = BeautifulSoup(data.content, "xml")
-# name = html.find("RecordTitle").string
-#
-# print(name)
-
 import pubchempy as pcp
 import pandas as pd
 import sys
-
+import os
 
 class PropertiesList:
     class AvailableProperties:
@@ -113,7 +95,8 @@ def export_to_excel(df, file_name, sheet_name):
         return output_list
 
     # Create a Pandas Excel writer using XlsxWriter as the engine.
-    writer = pd.ExcelWriter(f'{file_name}', engine='xlsxwriter',
+    file_name_path = os.path.join(os.getcwd(),file_name)
+    writer = pd.ExcelWriter(f'{file_name_path}', engine='xlsxwriter',
                             engine_kwargs={'options': {'strings_to_numbers': True}})
     df.to_excel(writer, index=False, sheet_name=sheet_name)
 
@@ -153,6 +136,7 @@ def process_molecules(compounds_list):
     df =comp.getCompoundsPropertiesData()
     export_to_excel(df,file_name="Compounds.xlsx", sheet_name='Properties')
 def read_and_save_molecules():
+
     if len(sys.argv)!=2:
         print("Usage: use input_molecules.txt input file to read compound names or pass argument X to read molecules from script variable")
         sys.exit(1)

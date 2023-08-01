@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 from compound_normalization import export_to_excel
+import os
 
 def check_range(value, ranges: tuple):
     (range_low, range_up)=ranges
@@ -36,7 +37,13 @@ def lipinski_rule(df: pd.DataFrame):
 def evaluate_compounds():
     # Excel file with compounds properties
     excel_file = "Compounds.xlsx"
-    df = pd.read_excel(excel_file)
+    excel_file_path = os.path.join(os.getcwd(), excel_file)
+
+    if not os.path.exists(excel_file_path):
+        print("Input file not found. Run compound_normalization.py to create input file.")
+        exit(1)
+
+    df = pd.read_excel(excel_file_path)
 
     # Evaluating compounds according to Lipinski rule of 5
     df = lipinski_rule(df)
