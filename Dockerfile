@@ -5,10 +5,11 @@ FROM python:3.9-slim
 WORKDIR /app
 
 # Copy the necessary files into the container
-COPY input_molecules.txt compound_normalization.py requirements.txt /app/
+COPY input_molecules.txt compound_normalization.py requirements.txt compounds_ranking.py run_scripts.py /app/
 
 # Install required dependencies
 RUN pip install -r requirements.txt
 
-# Call python script with argument
-CMD [ "python", "./compound_normalization.py", "input_molecules.txt" ]
+RUN chmod +x run_scripts.py
+# Call python scripts
+CMD [ "python3", "./run_scripts.py" ]
